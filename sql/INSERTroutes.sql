@@ -5,11 +5,11 @@ copy temp_json from '/Users/matt/FindMyBus/routes.json';
 insert into routes 
 
 select values->>'route_id' as route_id,
-       values->>'agency_id ' as agency_id,
+       values->>'agency_id' as agency_id,
        values->>'route_short_name' as route_short_name,
        values->>'route_long_name' as  route_long_name,
        values->>'route_desc' as  route_desc,
-       (CAST(values->>'route_type' AS integer)) AS route_id,
+       (CAST(values->>'route_type' AS integer)) AS route_type,
        values->>'route_url' as route_url,
        values->>'route_color' as  route_color,
        values->>'route_text_color' as route_text_color
