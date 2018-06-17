@@ -7,19 +7,19 @@ var options = {
     url: 'https://api.at.govt.nz/v2/gtfs/trips',
     method: 'GET',
     accept: 'application/json',
+    rejectUnauthorized: false, 
     json: true,
     headers: {'Ocp-Apim-Subscription-Key': '9b84df205db44253b96dc1fc1fe11df3'}   
 };
 // Start the request
 request(options, function(error, response, body) {
     var res  = body.response; //get rid of status and error from response
+    //console.log(res);
+    console.log(res.length);
     var s = JSON.stringify(res);
-    //var clean = s.substring(1, s.length-1); //remove square brackets
-    console.log(res);
     if (error) { 
         return console.log(error); 
     }
-    //var obj = JSON.parse(clean);
     var path = "/Users/matt/FindMyBus/trips.json";
     fs.writeFile(path, s, 'utf-8', function(err) {
         if (err) {
