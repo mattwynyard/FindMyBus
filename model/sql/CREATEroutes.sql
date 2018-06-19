@@ -1,3 +1,5 @@
+drop table if exists routes;
+
 create table routes (
                     route_id varchar(50),
                     agency_id varchar(50),

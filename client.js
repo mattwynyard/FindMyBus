@@ -31,11 +31,14 @@ var client = (function() {
         }
         
         request(options, function(error, response, body) {
+            //var records = 0;
+            
             var time = Date.now() - start;
             var res = body.response
             if (api == "routes" || api == "trips") {
                 res = body.response; //get rid of status and error from response
             } else if (api == 'positions' || api == "trip_updates") {
+                res = body.response.entity;
                 var arr = [];
             //console.log(res[0].vehicle.trip.start_time);
                 for (var i = 0; i < res.length; i += 1) { //need to loop res as trip_update is an array          
@@ -44,8 +47,8 @@ var client = (function() {
                         res[i].vehicle.trip.start_time = null;
                     }
                     arr.push(res[i].vehicle);
-                count += 1;
                 }
+                res = arr;
             } else {
                 console.log("Error in arguements");
                 return 0;
@@ -64,7 +67,7 @@ var client = (function() {
                     path = "/Users/matt/FindMyBus/json/trips.json";
                     break;
                 case "positions":
-                    path = "/Users/matt/FindMyBus/json/locations.json";
+                    path = "/Users/matt/FindMyBus/json/positions.json";
                     break;
                 default:
                     console.log(path);
@@ -77,7 +80,7 @@ var client = (function() {
                     return console.log(err);
                 } else {
                     var time = Date.now() - start;
-                    console.log(s.length + " records written to file: " + path);
+                    console.log(res.length + " records written to file: " + path + '\n');
                 }
             }); //end write
             }); //end request

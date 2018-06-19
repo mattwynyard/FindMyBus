@@ -1,3 +1,5 @@
+drop table if exists trips ;
+
 create table trips (
                     trip_id varchar(50),
                     route_id varchar(50),

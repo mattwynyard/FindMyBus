@@ -1,6 +1,7 @@
-create temporary table temp_json (values text);
-copy temp_json from '/Users/matt/FindMyBus/positions.json';
 delete from positions;
+
+create temporary table temp_json (values text);
+copy temp_json from '/Users/matt/FindMyBus/json/positions.json';
 insert into positions 
 
 select  values->'trip'->>'trip_id' as trip_id,
@@ -10,7 +11,7 @@ select  values->'trip'->>'trip_id' as trip_id,
         values->'vehicle'->>'id' as vehicle_id,
         (CAST(values->'position'->>'latitude' as real)) as latitude,
         (CAST(values->'position'->>'longitude' as real)) as longitude,
-        (CAST(values->'position'->>'bearing' as int)) as bearing,
+        (CAST(values->'position'->>'bearing' as real)) as bearing,
         (CAST(values->>'occupancy_status' as int)) as occupancy_status
 
 from   (

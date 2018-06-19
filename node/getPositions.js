@@ -18,7 +18,7 @@ request(options, function(error, response, body) {
     //console.log(res[0].vehicle);
     var count = 0;
     var arr = [];
-    //console.log(res[0].vehicle.trip.start_time);
+    //console.log(res[0].vehicle);
     for (var i = 0; i < res.length; i += 1) { //need to loop res as trip_update is an array
         
         if (res[i].vehicle.trip.start_time > "24:00:00") { //######ned to fix times!!!!!
@@ -36,7 +36,7 @@ request(options, function(error, response, body) {
         return console.log(error); 
     }
     //var obj = JSON.parse(clean);
-    var path = "/Users/matt/FindMyBus/positions.json";
+    var path = "/Users/matt/FindMyBus/json/positions.json";
     fs.writeFile(path, s, 'utf-8', function(err) {
         if (err) {
             return console.log(err);

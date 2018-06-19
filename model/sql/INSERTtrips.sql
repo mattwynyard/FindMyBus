@@ -1,5 +1,9 @@
+--delete from trip_updates;
+--delete from positions;
+--delete from trips;
+
 create temporary table temp_json (values text);
-copy temp_json from '/Users/matt/FindMyBus/trips.json';
+copy temp_json from '/Users/matt/FindMyBus/json/trips.json';
 
 -- uncomment the line above to insert records into your table
 insert into trips
