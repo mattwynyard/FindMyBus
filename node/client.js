@@ -61,13 +61,13 @@ var client = (function() {
             console.log( '\n' + (Buffer.byteLength(s)/1000).toFixed(2)+ " kilobytes downloaded in: " + (time/1000) + " sec");
             switch (api) {
                 case "routes":
-                    path = "/Users/matt/FindMyBus/json/routes.json";
+                    path = "/Users/matt/FindMyBus/api/model/json/routes.json";
                     break;
                 case "trips":
-                    path = "/Users/matt/FindMyBus/json/trips.json";
+                    path = "/Users/matt/FindMyBus/api/model/json/trips.json";
                     break;
                 case "positions":
-                    path = "/Users/matt/FindMyBus/json/positions.json";
+                    path = "/Users/matt/FindMyBus/api/model/json/positions.json";
                     break;
                 default:
                     console.log(path);
