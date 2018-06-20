@@ -1,3 +1,12 @@
+/**
+ * Client to handle get data from ATMetro server.
+ *
+ * @link   URL
+ * @file   This files defines the MyClass class.
+ * @author Matt Wynyard.
+ * @since  20th June 2018
+ */
+
 "use strict";
 const fs = require('fs');
 
@@ -6,11 +15,11 @@ var client = (function() {
     var route = 'https://api.at.govt.nz/v2/gtfs/routes';
     var trip = 'https://api.at.govt.nz/v2/gtfs/trips';
     var  position = "https://api.at.govt.nz/v2/public/realtime/vehiclelocations";
-    var addr = '';
-
     var request = require('request');  
+    
+    //set up request options
     var options = {
-        url: addr,
+        url: '',
         method: 'GET',
         accept: "application/json", 
         rejectUnauthorized: false, //stops certificate error
@@ -20,6 +29,11 @@ var client = (function() {
     var start = Date.now(); 
     var path = "";
     // Start the request
+/**
+ * Downloads data from ATMetro server and puts in JSON files.
+ * 
+ * @param String  api  the ATMetro endpoint to get data from.
+ */
     function getJSON(api) {
 
         if (api == "routes") {
@@ -28,11 +42,9 @@ var client = (function() {
             options.url = trip;
         } else {
             options.url = position;
-        }
-        
-        request(options, function(error, response, body) {
-            //var records = 0;
-            
+        }  
+
+        request(options, function(error, response, body) {      
             var time = Date.now() - start;
             var res = body.response
             if (api == "routes" || api == "trips") {
@@ -40,7 +52,6 @@ var client = (function() {
             } else if (api == 'positions' || api == "trip_updates") {
                 res = body.response.entity;
                 var arr = [];
-            //console.log(res[0].vehicle.trip.start_time);
                 for (var i = 0; i < res.length; i += 1) { //need to loop res as trip_update is an array          
                     if (res[i].vehicle.trip.start_time > "24:00:00") { //######need to fix times!!!!!
                         console.log(res[i].vehicle.trip.start_time);
@@ -54,7 +65,6 @@ var client = (function() {
                 return 0;
             }
             var s = JSON.stringify(res);
-            //console.log(s);
             if (error) { 
                 return console.log(error); 
             }
@@ -74,7 +84,7 @@ var client = (function() {
                     console.log("error");
                     return 0;
             }
-            //console.log(path);
+
             fs.writeFile(path, s, function(err) {
                 if (err) {
                     return console.log(err);
@@ -95,7 +105,4 @@ process.argv.forEach((val, index) => {
     if (index > 1) {
         client.getJSON(val);
     }
-    //console.log(`${index}: ${val}`);
-  });
-
-//client.get("route");
+});
