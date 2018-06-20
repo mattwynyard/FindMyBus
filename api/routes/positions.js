@@ -1,3 +1,17 @@
+/**
+ * Router to handle get requests.
+ *
+ * Handels position/[query] to serve JSON of bus requested.
+ * Reads data from json file and searches for the supplied query.
+ *
+ * @link   URL
+ * @file   This files defines the MyClass class.
+ * @author Matt Wynyard.
+ * @since  x.x.x
+ */
+  
+
+
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
@@ -13,7 +27,7 @@ router.get('/:bus', (req, res, next) => {
     bus = bus.toUpperCase();
 
     var myJSON = {};
-    var data = fs.readFileSync('./api/model/json/bus.json', 'utf-8');
+    var data = fs.readFileSync('./api/model/json/bus.json', 'utf-8'); //json file containing data
     data = JSON.parse(data);
     var arr = []
 
