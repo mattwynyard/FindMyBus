@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="PostgreSQL" id="Project_29143bb" template="Default" database="PostgreSQL" >
+	<schema name="public" catalogname="findmybus" schemaname="public" >
+		<table name="routes" >
+			<column name="route_id" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="agency_id" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="route_short_name" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="route_long_name" type="varchar" length="100" decimal="0" jt="12" />
+			<column name="route_desc" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="route_type" type="smallint" length="5" decimal="0" jt="5" />
+			<column name="route_url" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="route_color" type="varchar" length="20" decimal="0" jt="12" />
+			<column name="route_text_color" type="varchar" length="20" decimal="0" jt="12" />
+			<index name="routes_pkey" unique="PRIMARY_KEY" >
+				<column name="route_id" />
+			</index>
+		</table>
+		<table name="trip_updates" >
+			<column name="vehicle_id" type="varchar" length="20" decimal="0" jt="12" mandatory="y" />
+			<column name="trip_id" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="route_id" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="start_time" type="time" length="15" decimal="6" jt="92" />
+			<column name="schedule_relationship" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="stop_sequence" type="smallint" length="5" decimal="0" jt="5" />
+			<column name="stop_id" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="trip_short_name" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="trip_type" type="varchar" length="50" decimal="0" jt="12" />
+			<index name="trip_updates_pkey" unique="PRIMARY_KEY" >
+				<column name="vehicle_id" />
+			</index>
+			<fk name="trip_updates_trip_id_fkey" to_schema="public" to_table="trips" >
+				<fk_column name="trip_id" pk="trip_id" />
+			</fk>
+		</table>
+		<table name="trips" >
+			<column name="trip_id" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="route_id" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="service_id" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="trip_headsign" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="direction_id" type="smallint" length="5" decimal="0" jt="5" />
+			<column name="block_id" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="shape_id" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="trip_short_name" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="trip_type" type="varchar" length="50" decimal="0" jt="12" />
+			<index name="trips_pkey" unique="PRIMARY_KEY" >
+				<column name="trip_id" />
+			</index>
+			<fk name="trips_route_id_fkey" to_schema="public" to_table="routes" >
+				<fk_column name="route_id" pk="route_id" />
+			</fk>
+		</table>
+	</schema>
+	<connector name="PostgreSQL" database="PostgreSQL" driver_class="org.postgresql.Driver" driver_jar="postgresql-42.2.2.jar" driver_desc="Standard" host="localhost" port="5432" instance="findmybus" user="postgres" passwd="dDBxMWIxZjJqM281dDhsMTNkMjE=" />
+	<layout name="Default Layout" id="Layout_16087d6" show_relation="columns" >
+		<entity schema="public" name="trips" color="c1d8ee" x="300" y="45" />
+		<entity schema="public" name="routes" color="bfd4f5" x="45" y="195" />
+		<entity schema="public" name="trip_updates" color="c1d8ee" x="315" y="300" />
+	</layout>
+	<layout name="Sample Layout with Tools" id="Layout_17db38c" show_column_type="y" show_relation="columns" >
+		<entity schema="public" name="routes" color="bfd4f5" x="330" y="150" />
+		<callout x="45" y="75" pointer="NO" >
+			<comment><![CDATA[Double-click any table, column or foreign key to edit, right-click to start one of the tools below.
+Use the Relational Data Browse for simultaneously exploring data from multiple tables.
+All tools will be saved to project file and can be reopen.]]></comment>
+		</callout>
+		<group name="positions" color="ecf0f7" >
+			<entity schema="public" name="routes" />
+		</group>
+		<script name="Sample SQL Editor" id="Editor_2c35ef0" language="SQL" >
+			<string><![CDATA[SELECT * 
+FROM
+	"public".positions s;]]></string>
+		</script>
+		<query id="Query_4d2896d" name="Sample Query Builder" >
+			<query_table schema="public" name="routes" alias="r" x="45" y="45" >
+				<column name="route_id" />
+				<column name="agency_id" />
+				<column name="route_short_name" />
+				<column name="route_long_name" />
+				<column name="route_desc" />
+				<column name="route_type" />
+				<column name="route_url" />
+				<column name="route_color" />
+				<column name="route_text_color" />
+			</query_table>
+		</query>
+	</layout>
+</project>
