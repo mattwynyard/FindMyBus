@@ -6,7 +6,7 @@ delete from routes;
 create temporary table temp_json (values text);
 copy temp_json from '/Users/matt/FindMyBus/api/model/json/routes.json';
 
--- uncomment the line above to insert records into your table
+-- uncomment the line below to insert records into your table
 insert into routes 
 
 select values->>'route_id' as route_id,
