@@ -2,6 +2,7 @@
 
 var server = (function() {
 
+
     const http = require('http');
     const port = process.env.PORT || 3000;
     const os = require('os');
@@ -10,14 +11,20 @@ var server = (function() {
     const app = require('./app'); //import app.js
     const server = http.createServer(app);
 
+    server.on('request', (request, response) => {
+        const { headers } = request;
+        const userAgent = headers['user-agent'];
+        console.log(userAgent);
+      });
+
     function useLAN(val) {
+        address = getIPAddress();
         if (val === true) {
-            address = getIPAddress();
-            server.listen(3000, address);
-            console.log('Listening at http://' + address + ':' + port);
+        server.listen(3000, address);
+        console.log('Listening at http://' + address + ':' + port);
         } else {
-            server.listen(3000, address);
-            console.log('Listening at http://' + address + ':' + port);
+        server.listen(3000, address);
+        console.log('Listening at http://' + address + ':' + port);
         }
     }
 
@@ -31,20 +38,21 @@ var server = (function() {
             // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
             return;
             }
-
             if (alias >= 1) {
             // this single interface has multiple ipv4 addresses
             //console.log(ifname + ':' + alias, iface.address);
+            } else if (ifname == "en0") {
+                addr = iface.address;
             } else {
+
+                return 0;
+            }
             // this interface has only one ipv4 adress
             //console.log(ifname, iface.address);
-            addr = iface.address;
-            }
             ++alias;
         });
         
         });
-        console.log(addr);
         return addr;;
     } //end getIPAddress()
     return {
@@ -53,7 +61,6 @@ var server = (function() {
 })();//end closure
 
 process.argv.forEach((val, index) => {
-    console.log(val);
     if (index == 2 && val == "-lan") {
         server.useLAN(true);
     } else if (index == 2 && val == "-local") {
