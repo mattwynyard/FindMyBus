@@ -12,10 +12,13 @@ const fs = require('fs');
 
 var client = (function() {
 
-    var route = 'https://api.at.govt.nz/v2/gtfs/routes';
-    var trip = 'https://api.at.govt.nz/v2/gtfs/trips';
-    var  position = "https://api.at.govt.nz/v2/public/realtime/vehiclelocations";
-    var request = require('request');  
+    const route = 'https://api.at.govt.nz/v2/gtfs/routes';
+    const trip = 'https://api.at.govt.nz/v2/gtfs/trips';
+    const position = "https://api.at.govt.nz/v2/public/realtime/vehiclelocations";
+    //const trip_updates = 
+    const stops = "https://api.at.govt.nz/v2/gtfs/stops";
+    const shapes = "https://api.at.govt.nz/v2/gtfs/shapes/shapeId/";
+    const request = require('request');  
     
     //set up request options
     var options = {
@@ -40,10 +43,16 @@ var client = (function() {
             options.url = route;
         } else if (api == "trips") {        
             options.url = trip;
-        } else {
+        } else if (api == "positions") {
             options.url = position;
-        }  
-
+        } else if (api == "stops") {
+            options.url = stops;
+        } else if (api == "shapes") {
+            options.url = shapes;
+        } else {
+            console.log("need arguemnt");
+            return 0;
+        }
         request(options, function(error, response, body) {      
             var time = Date.now() - start;
             var res = body.response
@@ -60,8 +69,10 @@ var client = (function() {
                     arr.push(res[i].vehicle);
                 }
                 res = arr;
+            } else if (api == "stops") {
+                res = body.response; 
             } else {
-                console.log("Error in arguements");
+                console.log("error");
                 return 0;
             }
             var s = JSON.stringify(res);
@@ -79,12 +90,18 @@ var client = (function() {
                 case "positions":
                     path = "/Users/matt/FindMyBus/api/model/json/positions.json";
                     break;
+                case "stops":
+                    path = "/Users/matt/FindMyBus/api/model/json/stops.json";
+                    break;
+                case "shapes":
+                    path = "/Users/matt/FindMyBus/api/model/json/shapes.json";
+                    break;
                 default:
-                    console.log(path);
+                    //console.log(path);
                     console.log("error");
                     return 0;
+                    
             }
-
             fs.writeFile(path, s, function(err) {
                 if (err) {
                     return console.log(err);
@@ -93,8 +110,8 @@ var client = (function() {
                     console.log(res.length + " records written to file: " + path + '\n');
                 }
             }); //end write
-            }); //end request
-    } //end getRoute
+        }); //end request
+    } //end getJSON
 
     return {
         getJSON: getJSON
