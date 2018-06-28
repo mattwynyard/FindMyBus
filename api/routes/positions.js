@@ -10,15 +10,13 @@
  * @since  x.x.x
  */
   
-
-
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 
 router.get('/', (req, res, next) => {
     res.status(200).json({
-    message: "hello from server"
+    message: "hello from server)"
     });
 });
 
