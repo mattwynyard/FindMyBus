@@ -18,12 +18,12 @@ var server = (function() {
       });
 
     function useLAN(val) {
-        address = getIPAddress();
         if (val === true) {
-        server.listen(3000, address);
+            address = getIPAddress();
+            server.listen(3000, address);
         console.log('Listening at http://' + address + ':' + port);
         } else {
-        server.listen(3000, address);
+            server.listen(3000, address);
         console.log('Listening at http://' + address + ':' + port);
         }
     }
