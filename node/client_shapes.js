@@ -49,7 +49,7 @@ fs.createReadStream(path)
             var runTime = Date.now() - start;
             var time = runTime - timeCounter;
             timeCounter = runTime;
-            console.log(body.response.length);
+            //console.log(body.response.length);
             for (var i = 0; i < body.response.length; i += 1) {
                 body.response[i].route_id = routeCode;
             }
@@ -59,7 +59,7 @@ fs.createReadStream(path)
             console.log( '\n' + (Buffer.byteLength(s)/1000).toFixed(2) + 
             " kilobytes downloaded in: " + (time/1000) + " sec");
             var newStr = s.substring(1, s.length-1);
-            console.log(((count / records) * 100) + " % downloaded with a filesize of " + 
+            console.log(((count / records) * 100).toFixed(2) + "% downloaded with a total filesize of " + 
                 (fileSize/1000).toFixed(2) + " Mbytes");
             resolve(newStr);
             console.log(count + " files downloaded with a run time of: " + (runTime/1000) + " sec");
@@ -70,7 +70,7 @@ fs.createReadStream(path)
     async function callShapes() {
         let promises = [];
         var start = Date.now(); 
-        records = 5 //csvData.length    
+        records = shapeCodes.length    
         var count = 0;
         var dataLength = records //records//set low at moment
         console.log("Downloading... " + dataLength + " files");
