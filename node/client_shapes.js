@@ -10,7 +10,7 @@
 "use strict";
 const fs = require('fs');
 const request = require('request'); 
-var parse = require('csv-parse');
+const parse = require('csv-parse');
 
 const path = "../api/model/json/shapes.csv";
 const pathJSON = "../api/model/json/shapes.json";
@@ -26,6 +26,7 @@ var options = {
 };
 
 var csvData = [];
+var timeCounter = 0;
 fs.createReadStream(path)
     .pipe(parse({delimiter: ','}))
     .on('data', function(data) {
@@ -33,21 +34,24 @@ fs.createReadStream(path)
     })
     .on('end',function() {
     
-    function requestData(count, options, start) {
+    function requestData(options, start, count) {
         return new Promise((resolve) => { 
         request(options, function(error, response, body) {         
             if (error) {
                 console.log(error);
                 return;
             }
-            var time = Date.now() - start;
-            var s = JSON.stringify(body.response);
-            console.log(count + " files downloaded in: " + (time/1000));
 
+            var runTime = Date.now() - start;
+            var time = runTime - timeCounter;
+            timeCounter = runTime;
+
+            var s = JSON.stringify(body.response);
             console.log( '\n' + (Buffer.byteLength(s)/1000).toFixed(2) + 
             " kilobytes downloaded in: " + (time/1000) + " sec");
             var newStr = s.substring(1, s.length-1);
             resolve(newStr);
+            console.log(count + " files downloaded with run time of: " + (runTime/1000) + " sec");
         });
     });
     }
@@ -55,14 +59,14 @@ fs.createReadStream(path)
     async function callShapes() {
         let promises = [];
         var start = Date.now(); 
-        var records = csvData.length //2212 objects
-        console.log(records);
-        count = 0;
-        var dataLength = records//set low at moment
+        var records = csvData.length    
+        var count = 0;
+        var dataLength = records //records//set low at moment
+        console.log("Downloading... " + dataLength + " files");
         for (var i = 0; i < dataLength; i += 1) {
             var url = shapes + csvData[i];
             options.url = url; //set url query
-            console.log('Downloading... ' + console.log(url));
+            console.log('Processing url... ' + url);
             await sleep(2000)
             //console.log('Two second later');
             count += 1;
@@ -71,7 +75,7 @@ fs.createReadStream(path)
 
         Promise.all(promises)
         .then((results) => {
-        console.log("All done");
+        console.log("Processing results...." + '\n');
         let allData = "[" + results + "]"
         writeFile(allData);
         })
@@ -92,7 +96,7 @@ fs.createReadStream(path)
             if (err) {
                 return console.log(err);
                 } else {
-                    console.log("file complete")
+                    console.log("JSON file written")
                 }
             });
         }   
