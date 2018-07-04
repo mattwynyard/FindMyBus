@@ -13,7 +13,7 @@ const request = require('request');
 const parse = require('csv-parse');
 
 const path = "../api/model/json/shapes.csv";
-const pathJSON = "../api/model/json/shapes.json";
+const pathJSON = "../api/model/json/shapes_temp.json";
 var shapes = "https://api.at.govt.nz/v2/gtfs/shapes/shapeId/";
 
 var options = {
@@ -27,6 +27,8 @@ var options = {
 
 var csvData = [];
 var timeCounter = 0;
+var fileSize = 0;
+var records = 0;
 fs.createReadStream(path)
     .pipe(parse({delimiter: ','}))
     .on('data', function(data) {
@@ -47,11 +49,14 @@ fs.createReadStream(path)
             timeCounter = runTime;
 
             var s = JSON.stringify(body.response);
+            fileSize = fileSize += parseFloat((Buffer.byteLength(s)/1000).toFixed(2))
             console.log( '\n' + (Buffer.byteLength(s)/1000).toFixed(2) + 
             " kilobytes downloaded in: " + (time/1000) + " sec");
             var newStr = s.substring(1, s.length-1);
+            console.log(((count / records) * 100) + " % downloaded with a filesize of " + 
+                (fileSize/1000).toFixed(2) + " Mbytes");
             resolve(newStr);
-            console.log(count + " files downloaded with run time of: " + (runTime/1000) + " sec");
+            console.log(count + " files downloaded with a run time of: " + (runTime/1000) + " sec");
         });
     });
     }
@@ -59,7 +64,7 @@ fs.createReadStream(path)
     async function callShapes() {
         let promises = [];
         var start = Date.now(); 
-        var records = csvData.length    
+        records = 5 //csvData.length    
         var count = 0;
         var dataLength = records //records//set low at moment
         console.log("Downloading... " + dataLength + " files");
