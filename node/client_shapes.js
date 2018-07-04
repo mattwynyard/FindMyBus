@@ -11,6 +11,7 @@
 const fs = require('fs');
 const request = require('request'); 
 const parse = require('csv-parse');
+const colours = require('colors');
 
 const path = "../api/model/json/shapes.csv";
 const pathJSON = "../api/model/json/shapes_routes.json";
@@ -56,13 +57,14 @@ fs.createReadStream(path)
             var s = JSON.stringify(body.response);
             //console.log(s);
             fileSize = fileSize += parseFloat((Buffer.byteLength(s)/1000).toFixed(2))
-            console.log( '\n' + (Buffer.byteLength(s)/1000).toFixed(2) + 
-            " kilobytes downloaded in: " + (time/1000) + " sec");
+            console.log( '\n' + ((Buffer.byteLength(s)/1000).toFixed(2)).green + 
+            "kB".green + " downloaded in: " + (time/1000).toFixed(2).green + " secs".green);
             var newStr = s.substring(1, s.length-1);
-            console.log(((count / records) * 100).toFixed(2) + "% downloaded with a total filesize of " + 
-                (fileSize/1000).toFixed(2) + " Mbytes");
+            console.log(((count / records) * 100).toFixed(2).yellow + "%".yellow + " downloaded with a total filesize of " + 
+                (fileSize/1000).toFixed(2).yellow + " Mbytes".yellow);
             resolve(newStr);
-            console.log(count + " files downloaded with a run time of: " + (runTime/1000) + " sec");
+            console.log(count.toString().cyan + " files".cyan + " downloaded with a total run time of: " 
+            + (runTime/1000).toFixed(2).cyan + " sec".cyan + '\n');
         });
     });
     }
@@ -73,7 +75,7 @@ fs.createReadStream(path)
         records = shapeCodes.length    
         var count = 0;
         var dataLength = records //records//set low at moment
-        console.log("Downloading... " + dataLength + " files");
+        console.log("Downloading... " + dataLength.toString().yellow + " files".yellow);
         for (var i = 0; i < dataLength; i += 1) {
             var url = shapes + shapeCodes[i];
             var routeCode = routeCodes[i];
