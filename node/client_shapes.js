@@ -13,7 +13,7 @@ const request = require('request');
 const parse = require('csv-parse');
 
 const path = "../api/model/json/shapes.csv";
-const pathJSON = "../api/model/json/shapes_temp.json";
+const pathJSON = "../api/model/json/shapes_routes.json";
 var shapes = "https://api.at.govt.nz/v2/gtfs/shapes/shapeId/";
 
 var options = {
@@ -25,18 +25,20 @@ var options = {
     headers: {'Ocp-Apim-Subscription-Key': '9b84df205db44253b96dc1fc1fe11df3'}    
 };
 
-var csvData = [];
+var shapeCodes = [];
+var routeCodes = [];
 var timeCounter = 0;
 var fileSize = 0;
 var records = 0;
 fs.createReadStream(path)
     .pipe(parse({delimiter: ','}))
     .on('data', function(data) {
-        csvData.push(data[1]);        
+        shapeCodes.push(data[1]); 
+        routeCodes.push(data[0]);       
     })
     .on('end',function() {
     
-    function requestData(options, start, count) {
+    function requestData(options, routeCode, start, count) {
         return new Promise((resolve) => { 
         request(options, function(error, response, body) {         
             if (error) {
@@ -47,8 +49,12 @@ fs.createReadStream(path)
             var runTime = Date.now() - start;
             var time = runTime - timeCounter;
             timeCounter = runTime;
-
+            console.log(body.response.length);
+            for (var i = 0; i < body.response.length; i += 1) {
+                body.response[i].route_id = routeCode;
+            }
             var s = JSON.stringify(body.response);
+            //console.log(s);
             fileSize = fileSize += parseFloat((Buffer.byteLength(s)/1000).toFixed(2))
             console.log( '\n' + (Buffer.byteLength(s)/1000).toFixed(2) + 
             " kilobytes downloaded in: " + (time/1000) + " sec");
@@ -69,13 +75,14 @@ fs.createReadStream(path)
         var dataLength = records //records//set low at moment
         console.log("Downloading... " + dataLength + " files");
         for (var i = 0; i < dataLength; i += 1) {
-            var url = shapes + csvData[i];
+            var url = shapes + shapeCodes[i];
+            var routeCode = routeCodes[i];
             options.url = url; //set url query
             console.log('Processing url... ' + url);
             await sleep(2000)
             //console.log('Two second later');
             count += 1;
-            promises.push(requestData(options, start, count));
+            promises.push(requestData(options, routeCode, start, count));
         }
 
         Promise.all(promises)
