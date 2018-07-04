@@ -26,7 +26,6 @@ var options = {
 };
 
 var csvData = [];
-var jsonData = "[";
 fs.createReadStream(path)
     .pipe(parse({delimiter: ','}))
     .on('data', function(data) {
@@ -34,18 +33,18 @@ fs.createReadStream(path)
     })
     .on('end',function() {
     
-    function requestData(options, start) {
-        return new Promise((resolve) => {
-   
-        request(options, function(error, response, body) {
-            
+    function requestData(count, options, start) {
+        return new Promise((resolve) => { 
+        request(options, function(error, response, body) {         
             if (error) {
                 console.log(error);
                 return;
             }
             var time = Date.now() - start;
             var s = JSON.stringify(body.response);
-            console.log( '\n' + (Buffer.byteLength(s)/1000).toFixed(2)+ 
+            console.log(count + " files downloaded in: " + (time/1000));
+
+            console.log( '\n' + (Buffer.byteLength(s)/1000).toFixed(2) + 
             " kilobytes downloaded in: " + (time/1000) + " sec");
             var newStr = s.substring(1, s.length-1);
             resolve(newStr);
@@ -53,30 +52,39 @@ fs.createReadStream(path)
     });
     }
 
-    function callShapes() {
+    async function callShapes() {
         let promises = [];
         var start = Date.now(); 
         var records = csvData.length //2212 objects
         console.log(records);
-        var dataLength = 5 //set low at moment
+        count = 0;
+        var dataLength = records//set low at moment
         for (var i = 0; i < dataLength; i += 1) {
             var url = shapes + csvData[i];
             options.url = url; //set url query
-            console.log(url);
-            promises.push(requestData(options, start));
+            console.log('Downloading... ' + console.log(url));
+            await sleep(2000)
+            //console.log('Two second later');
+            count += 1;
+            promises.push(requestData(options, start, count));
         }
 
         Promise.all(promises)
         .then((results) => {
         console.log("All done");
-        let allData = "[" + result + "]"
+        let allData = "[" + results + "]"
         writeFile(allData);
         })
         .catch((e) => {
             // Handle errors here
+            console.log("Error writing file");
         });
     }
 
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+      }
+      
     callShapes();
 
     function writeFile(jsonData) {
