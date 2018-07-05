@@ -1,4 +1,4 @@
-drop table if exists positions if exists;
+drop table if exists positions;
 
 create table positions (
                     trip_id varchar(50),
