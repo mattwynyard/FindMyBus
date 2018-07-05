@@ -7,7 +7,7 @@
  * @link   URL
  * @file   This files defines the MyClass class.
  * @author Matt Wynyard.
- * @since  x.x.x
+ * @since  July 2018.
  */
   
 const express = require('express');

@@ -1,5 +1,16 @@
+/**
+ * Router to handle get requests.
+ *
+ * Handels position/[query] to serve JSON of bus requested.
+ * Reads data from json file and searches for the supplied query.
+ *
+ * @link   URL
+ * @file   This files defines the MyClass class.
+ * @author Matt Wynyard.
+ * @since  July 2018.
+ */
 
-
+'use strict'
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
