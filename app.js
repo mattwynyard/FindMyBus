@@ -1,10 +1,13 @@
 const express = require("express");
 const app = express();
-const routes = require('./api/routes/positions')
-const stops = require('./api/routes/stops')
+const positions = require('./api/routes/positions');
+const stops = require('./api/routes/stops');
+const shapes = require('./api/routes/shapes');
 
-app.use('/positions', routes);
+app.use('/positions', positions);
 app.use('/stops', stops);
+app.use('/shapes', shapes);
+
 
 // app.use((req, res, next) => {
 //     const error = new Error('Not found');
