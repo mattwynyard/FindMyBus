@@ -1,7 +1,9 @@
+drop table if exists shapes;
+
 create table shapes (
                     shape_id varchar(50),
                     shape_pt_lat real,
-                    shape_pt_long real,
+                    shape_pt_lon real,
                     shape_pt_sequence int,
                     shape_dist_traveled real,
                     route_id varchar(50),
