@@ -14,7 +14,7 @@ const parse = require('csv-parse');
 const colours = require('colors');
 
 const path = "../api/model/json/shapes.csv";
-const pathJSON = "../api/model/json/shapes_routes.json";
+const pathJSON = "../api/model/json/shapes.json";
 var shapes = "https://api.at.govt.nz/v2/gtfs/shapes/shapeId/";
 
 var options = {
@@ -74,7 +74,7 @@ fs.createReadStream(path)
         var start = Date.now(); 
         records = shapeCodes.length    
         var count = 0;
-        var dataLength = records //records//set low at moment
+        var dataLength = 30//records //records//set low at moment
         console.log("Downloading... " + dataLength.toString().yellow + " files".yellow);
         for (var i = 0; i < dataLength; i += 1) {
             var url = shapes + shapeCodes[i];
